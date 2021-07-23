@@ -12,13 +12,11 @@ const AppContext = createContext<AppContextProps>({})
 export function AppProvider(props) {
   const [tema, setTema] = useState<Tema> ('dark')
 
-
   function alternarTema() {
     setTema(tema === '' ? 'dark' : '')
-
     console.log('alternarTema')
   }
-
+  
   return (
     <AppContext.Provider value={{
       tema,
