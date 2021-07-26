@@ -4,7 +4,7 @@ import { IconeAtencao } from "../components/icons";
 import useAuth from "../data/hook/useAuth";
 
 export default function Autenticacao() {
-  const {usuario, loginGoogle} =  useAuth()
+  const { usuario, loginGoogle } = useAuth()
 
 
 
@@ -15,7 +15,7 @@ export default function Autenticacao() {
 
   function exibirErro(msg, tempoEmSegundos = 5) {
     setErro(msg)
-    setTimeout(() =>  setErro(null), tempoEmSegundos * 1000 )
+    setTimeout(() => setErro(null), tempoEmSegundos * 1000)
   }
 
   function submit() {
