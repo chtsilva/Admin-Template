@@ -8,6 +8,8 @@ interface AuthContextProps {
   usuario?: Usuario
   carregando?: boolean
   loginGoogle?: () => Promise<void>
+  login?: (email: string, senha: string) => Promise<void>
+  cadastrarUsuario?: (email: string, senha: string) => Promise<void>
   logout?: () => Promise<void>
 }
 
@@ -31,7 +33,6 @@ function gerenciarCookie(logado: boolean) {
     Cookies.remove('admin-template-chtsilva-auth')
   }
 }
-
 const AuthContext = createContext<AuthContextProps>({})
 
 export function AuthProvider(props) {
@@ -53,13 +54,34 @@ export function AuthProvider(props) {
     }
   }
 
+  async function login(email, senha) {
+    try {
+      setCarregando(true)
+      const resp = await firebase.auth().signInWithEmailAndPassword(email, senha)      
+      await configurarSessao(resp.user)
+      route.push('/')
+    } finally {
+      setCarregando(false)
+    }
+  }
+  async function cadastrarUsuario(email, senha) {
+    try {
+      setCarregando(true)
+      const resp = await firebase.auth().createUserWithEmailAndPassword(email, senha)
+      await configurarSessao(resp.user)
+      route.push('/')
+    } finally {
+      setCarregando(false)
+    }
+  }
+
   async function loginGoogle() {
     try {
       setCarregando(true)
       const resp = await firebase.auth().signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
       )
-      configurarSessao(resp.user)
+      await configurarSessao(resp.user)
       route.push('/')
     } finally {
       setCarregando(false)
@@ -90,6 +112,8 @@ export function AuthProvider(props) {
       usuario,
       carregando,
       loginGoogle,
+      login,
+      cadastrarUsuario,
       logout
     }} >
       {props.children}
